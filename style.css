@@ -1,0 +1,701 @@
+@property --fondo-1 { syntax: '<color>'; inherits: true; initial-value: #d8e8c8; }
+@property --fondo-2 { syntax: '<color>'; inherits: true; initial-value: #f5edce; }
+@property --fondo-3 { syntax: '<color>'; inherits: true; initial-value: #b8d5b0; }
+@property --acento { syntax: '<color>'; inherits: true; initial-value: #33472d; }
+
+:root {
+    --fondo-1: #d8e8c8;
+    --fondo-2: #f5edce;
+    --fondo-3: #b8d5b0;
+    --acento: #33472d;
+    --acento-rgb: 51, 71, 45;
+
+    /* Transición suave al cambiar de colores */
+    transition: --fondo-1 0.8s, --fondo-2 0.8s, --fondo-3 0.8s, --acento 0.8s;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Quixksand', Arial, sans-serif;
+}
+
+.contenedor-fondo {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: linear-gradient(135deg, var(--fondo-1), var(--fondo-2), var(--fondo-3));
+
+    z-index: -1;
+}
+
+.texto-fondo {
+    margin: 0;
+    color: var(--acento);
+
+    font-size: clamp(2rem, 8vw, 5rem);
+    font-weight: bold;
+    text-align: center;
+
+    letter-spacing: 0.08em;
+}
+
+.tarjeta-glass {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+
+    box-shadow: 0 8px 32px rgba(40, 60, 30, 0.15);
+
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    width: 320px;
+    height: auto;
+    padding: 24px;
+}
+
+.portada {
+    display: block;
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto 12px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(40, 60, 30, 0.2);
+}
+
+.portada[hidden] {
+    display: none;
+}
+
+#progreso {
+    width: 100%;
+    margin-top: 12px;
+    accent-color: var(--acento);
+}
+
+.tiempos {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 0.8rem;
+    color: var(--acento);
+    font-variant-numeric: tabular-nums;
+}
+
+.controles {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.controles button {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    background: rgba(var(--acento-rgb), 0.12);
+    border: 1px solid rgba(var(--acento-rgb), 0.35);
+    color: var(--acento);
+    transition: background 0.2s;
+}
+
+.controles button:hover {
+    background: rgba(var(--acento-rgb), 0.25);
+}
+
+.controles button.activo {
+    background: rgba(var(--acento-rgb), 0.35);
+}
+
+/* Etiqueta que funciona como botón para elegir archivos */
+.etiqueta-archivos {
+    display: block;
+    margin-top: 16px;
+    padding: 10px 16px;
+    text-align: center;
+    cursor: pointer;
+    color: var(--acento);
+    background: rgba(var(--acento-rgb), 0.12);
+    border: 1px solid rgba(var(--acento-rgb), 0.35);
+    border-radius: 999px;
+    transition: background 0.2s;
+}
+
+.etiqueta-archivos:hover {
+    background: rgba(var(--acento-rgb), 0.25);
+}
+
+/* El input real queda oculto; la etiqueta lo activa al tocarla */
+#selectorArchivos {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.informacion-cancion {
+    text-align: center;
+    margin-top: 16px;
+    color: var(--acento);
+}
+
+.informacion-cancion h2 {
+    margin: 0 0 4px;
+    font-size: 1.1rem;
+    overflow-wrap: anywhere;
+}
+
+.informacion-cancion p {
+    margin: 2px 0;
+    overflow-wrap: anywhere;
+}
+
+.pista {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* La tarjeta es el contenedor para poder cambiar el diseño según su ancho */
+.tarjeta-glass {
+    container-type: inline-size;
+}
+
+/* Esquina para estirar la tarjeta */
+.asa-redimensionar {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    width: 18px;
+    height: 18px;
+    cursor: ew-resize;
+    touch-action: none;
+    border-radius: 0 0 14px 0;
+    background: linear-gradient(135deg, transparent 50%, rgba(var(--acento-rgb), 0.5) 50%);
+}
+
+.album {
+    font-size: 0.85rem;
+    font-style: italic;
+    opacity: 0.85;
+}
+
+/* Tarjeta ancha: portada a la izquierda y datos a la derecha */
+@container (min-width: 460px) {
+    .contenido {
+        display: grid;
+        grid-template-columns: minmax(140px, 40%) 1fr;
+        grid-template-areas:
+            "portada info"
+            "progreso progreso"
+            "tiempos tiempos"
+            "controles controles"
+            "ajustes ajustes"
+            "etiqueta etiqueta";
+        column-gap: 16px;
+        align-items: center;
+    }
+
+    /* Si no hay portada, los datos ocupan toda la fila superior */
+    .contenido:has(.portada[hidden]) {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "info"
+            "progreso"
+            "tiempos"
+            "controles"
+            "ajustes"
+            "etiqueta";
+    }
+
+    .portada {
+        grid-area: portada;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        margin: 0;
+    }
+
+    .informacion-cancion {
+        grid-area: info;
+        text-align: left;
+        margin-top: 0;
+    }
+
+    #progreso { grid-area: progreso; }
+    .tiempos { grid-area: tiempos; }
+    .controles { grid-area: controles; }
+    .ajustes { grid-area: ajustes; }
+    .fila-archivos { grid-area: etiqueta; }
+}
+
+.contenido {
+    min-width: 0;
+}
+
+/* ===== ANIMACIONES AL CAMBIAR DE CANCIÓN ===== */
+@keyframes entrarPortada {
+    from {
+        opacity: 0;
+        transform: scale(0.85) rotate(-3deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes entrarTexto {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.portada.animar {
+    animation: entrarPortada 0.5s ease-out;
+}
+
+.informacion-cancion.animar > * {
+    animation: entrarTexto 0.4s ease-out both;
+}
+
+.informacion-cancion.animar > *:nth-child(2) { animation-delay: 0.08s; }
+.informacion-cancion.animar > *:nth-child(3) { animation-delay: 0.16s; }
+.informacion-cancion.animar > *:nth-child(4) { animation-delay: 0.24s; }
+/* ===== MODO MÓVIL: la app ocupa toda la pantalla ===== */
+@media (max-width: 600px) {
+    html, body {
+        overscroll-behavior: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .tarjeta-glass {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        transform: none !important;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow-y: auto;
+
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: rgba(255, 255, 255, 0.3);
+        cursor: default;
+
+        padding: calc(24px + env(safe-area-inset-top))
+                 20px
+                 calc(24px + env(safe-area-inset-bottom));
+    }
+
+    /* En el teléfono no se estira la tarjeta */
+    .asa-redimensionar {
+        display: none;
+    }
+
+    .portada {
+        max-width: 300px;
+    }
+}
+
+/* ===== TARJETA DE LA LISTA ===== */
+.tarjeta-lista {
+    top: 50%;
+    left: calc(50% + 200px);
+    transform: translateY(-50%);
+    width: 300px;
+    height: auto;
+    max-height: 70vh;
+    overflow-y: hidden;
+    cursor: grab;
+    color: var(--acento);
+}
+
+.tarjeta-lista[hidden] {
+    display: none !important;
+}
+
+.lista-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.lista-cabecera h2 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.lista-cabecera button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    background: rgba(var(--acento-rgb), 0.12);
+    border: 1px solid rgba(var(--acento-rgb), 0.35);
+    color: var(--acento);
+}
+
+#listaCanciones {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#listaCanciones li {
+    padding: 10px 12px;
+    margin-bottom: 4px;
+    border-radius: 10px;
+    cursor: pointer;
+    background: rgba(var(--acento-rgb), 0.06);
+    overflow-wrap: anywhere;
+    transition: background 0.2s;
+}
+
+#listaCanciones li:hover {
+    background: rgba(var(--acento-rgb), 0.18);
+}
+
+#listaCanciones li.actual {
+    background: rgba(var(--acento-rgb), 0.3);
+    font-weight: bold;
+}
+
+/* En el teléfono, la lista ocupa toda la pantalla sin límite de altura */
+@media (max-width: 600px) {
+    .tarjeta-lista {
+        max-height: none;
+    }
+}
+
+/* ===== BARRA DE DESPLAZAMIENTO INTEGRADA ===== */
+/* Firefox */
+.tarjeta-lista,
+.tarjeta-glass {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--acento-rgb), 0.35) transparent;
+}
+
+/* Chrome, Edge y Safari */
+.tarjeta-lista::-webkit-scrollbar,
+.tarjeta-glass::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tarjeta-lista::-webkit-scrollbar-track,
+.tarjeta-glass::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tarjeta-lista::-webkit-scrollbar-thumb,
+.tarjeta-glass::-webkit-scrollbar-thumb {
+    background: rgba(var(--acento-rgb), 0.35);
+    border-radius: 999px;
+}
+
+.tarjeta-lista::-webkit-scrollbar-thumb:hover,
+.tarjeta-glass::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--acento-rgb), 0.6);
+}
+
+/* Quita las flechas de arriba y abajo */
+.tarjeta-lista::-webkit-scrollbar-button,
+.tarjeta-glass::-webkit-scrollbar-button {
+    display: none;
+}
+
+/* ===== AJUSTES: VOLUMEN, REPETIR Y TEMA ===== */
+.ajustes {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.icono-volumen {
+    font-size: 1rem;
+    color: var(--acento);
+}
+
+.ajustes input[type="range"] {
+    flex: 1;
+    min-width: 0;
+    accent-color: var(--acento);
+}
+
+.ajustes button {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    background: rgba(var(--acento-rgb), 0.12);
+    border: 1px solid rgba(var(--acento-rgb), 0.35);
+    color: var(--acento);
+}
+
+.ajustes button:hover {
+    background: rgba(var(--acento-rgb), 0.25);
+}
+
+.ajustes button.activo {
+    background: rgba(var(--acento-rgb), 0.35);
+}
+
+/* Repetir apagado se ve más tenue */
+.repetir-apagado {
+    opacity: 0.45;
+}
+
+/* ===== TEMA OSCURO ===== */
+.oscuro {
+    --fondo-1: #1e261b;
+    --fondo-2: #2b2a22;
+    --fondo-3: #141910;
+    --acento: #f5edce;
+    --acento-rgb: 245, 237, 206;
+}
+
+.oscuro .contenedor-fondo {
+    background: linear-gradient(135deg, var(--fondo-1), var(--fondo-2), var(--fondo-3));
+}
+
+.oscuro .tarjeta-glass {
+    background: rgba(15, 20, 12, 0.45);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Botón de velocidad con texto */
+#velocidad {
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+/* ===== BUSCADOR EN LA LISTA ===== */
+#buscador {
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(var(--acento-rgb), 0.35);
+    background: rgba(255, 255, 255, 0.4);
+    color: var(--acento);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+#buscador::placeholder {
+    color: var(--acento);
+    opacity: 0.6;
+}
+
+#buscador:focus {
+    border-color: rgba(var(--acento-rgb), 0.7);
+}
+
+/* ===== VISUALIZADOR DE AUDIO ===== */
+.visualizador {
+    display: block;
+    width: 100%;
+    height: 64px;
+    margin-top: 10px;
+}
+
+/* La lista se organiza en columna: el encabezado y el buscador
+   quedan fijos y solo se desplazan las canciones */
+.tarjeta-lista {
+    display: flex;
+    flex-direction: column;
+}
+
+#listaCanciones {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* Barra de desplazamiento integrada, ahora en la lista */
+#listaCanciones {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--acento-rgb), 0.35) transparent;
+}
+
+#listaCanciones::-webkit-scrollbar {
+    width: 6px;
+}
+
+#listaCanciones::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#listaCanciones::-webkit-scrollbar-thumb {
+    background: rgba(var(--acento-rgb), 0.35);
+    border-radius: 999px;
+}
+
+#listaCanciones::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--acento-rgb), 0.6);
+}
+
+/* En el teléfono, la lista ocupa la pantalla y solo la lista se desplaza */
+@media (max-width: 600px) {
+    .tarjeta-lista {
+        overflow: hidden;
+    }
+
+    #listaCanciones {
+        max-height: none;
+    }
+}
+
+/* Cada canción es una fila: título a la izquierda y ♥ a la derecha */
+#listaCanciones li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Necesario para que los elementos ocultos sigan ocultos al usar flex */
+#listaCanciones li[hidden] {
+    display: none;
+}
+
+#listaCanciones .texto-item {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.btn-favorita {
+    flex-shrink: 0;
+    padding: 2px 4px;
+    border: none;
+    background: none;
+    color: var(--acento);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-favorita.activa {
+    color: #c0392b;
+}
+
+
+.boton-redondo {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    background: rgba(var(--acento-rgb), 0.12);
+    border: 1px solid rgba(var(--acento-rgb), 0.35);
+    color: var(--acento);
+    transition: background 0.2s;
+}
+
+.boton-redondo:hover {
+    background: rgba(var(--acento-rgb), 0.25);
+}
+
+.boton-redondo.activo {
+    background: rgba(var(--acento-rgb), 0.35);
+}
+
+/* Agrupa los botones de favoritas y orden en una fila */
+.fila-lista-botones {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+/* Título de la canción y nombre del fondo con fuente elegante */
+.informacion-cancion h2,
+.texto-fondo {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Etiqueta de archivos y botón de favorita en una misma fila */
+.fila-archivos {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.fila-archivos .etiqueta-archivos {
+    flex: 1;
+    margin-top: 0;
+}
+
+.fila-archivos .boton-redondo {
+    flex-shrink: 0;
+}
+
+/* Corazón rojo cuando la canción actual es favorita */
+#favoritaActual.activa {
+    color: #c0392b;
+}
+
+/* Se ve apagado cuando todavía no hay canciones */
+.boton-redondo:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.portada {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    pointer-events: auto;
+}

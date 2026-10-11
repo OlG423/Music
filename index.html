@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <title>Mi reproductor ONIONs</title>
+
+    <!-- Datos para instalar la app -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#33472d">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="ONIONs">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+
+    <!-- Registra el service worker para uso sin internet -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .catch(error => {
+                        console.error(
+                            'Error al registrar el service worker:',
+                            error
+                        );
+                    });
+            });
+        }
+    </script>
+</head>
+
+<body>
+
+    <!-- =========================
+         FONDO DE LA PÁGINA
+    ========================== -->
+    <div class="contenedor-fondo">
+        <h1 class="texto-fondo">ONIONs</h1>
+        <p class="subtitulo-fondo"></p>
+    </div>
+
+    <!-- =========================
+         TARJETA DEL REPRODUCTOR
+    ========================== -->
+    <main class="tarjeta-glass" id="tarjetaMovible">
+
+        <div class="contenido">
+
+            <!-- Portada de la canción -->
+            <img id="portada" class="portada" alt="Portada de la canción" draggable="false" hidden>
+
+            <!-- Barra de progreso -->
+            <input
+                type="range"
+                id="progreso"
+                value="0"
+                min="0"
+                max="100"
+                step="0.1"
+                aria-label="Progreso de la canción"
+            >
+
+            <!-- Tiempo transcurrido y restante -->
+            <div class="tiempos">
+                <span id="tiempoActual">0:00</span>
+                <span id="tiempoRestante">-0:00</span>
+            </div>
+
+            <!-- Botones del reproductor -->
+            <div class="controles">
+
+                <button
+                    type="button"
+                    id="anterior"
+                    aria-label="Canción anterior"
+                >⏮</button>
+
+                <button
+                    type="button"
+                    id="reproducir"
+                    aria-label="Reproducir"
+                >▶</button>
+
+                <button
+                    type="button"
+                    id="siguiente"
+                    aria-label="Siguiente canción"
+                >⏭</button>
+
+                <button
+                    type="button"
+                    id="aleatorio"
+                    aria-label="Reproducción aleatoria"
+                    aria-pressed="false"
+                >&#128256;&#xFE0E;</button>
+
+                <button
+                    type="button"
+                    id="btnLista"
+                    aria-label="Ver lista de canciones"
+                >☰</button>
+
+            </div>
+
+            <!-- Volumen, repetir y tema -->
+            <div class="ajustes">
+                <span class="icono-volumen" aria-hidden="true">🔊</span>
+                <input
+                    type="range"
+                    id="volumen"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="1"
+                    aria-label="Volumen"
+                >
+                <button
+                    type="button"
+                    id="repetir"
+                    class="repetir-apagado"
+                    aria-label="Repetir: no"
+                    title="Repetir"
+                >🔁</button>
+                <button
+                    type="button"
+                    id="tema"
+                    aria-label="Cambiar tema"
+                    aria-pressed="false"
+                    title="Tema claro u oscuro"
+                >🌙</button>
+                <button
+                type="button"
+                id="velocidad"
+                aria-label="Velocidad 1x"
+                title="Velocidad de reproducción"
+                >1x</button>
+            </div>
+
+            <!-- Selector de archivos de audio -->
+            <div class="fila-archivos">
+                <label class="etiqueta-archivos" for="selectorArchivos">
+                    Elige tu música
+                </label>
+                <button
+                    type="button"
+                    id="favoritaActual"
+                    class="boton-redondo"
+                    aria-pressed="false"
+                    aria-label="Añadir a favoritas"
+                    title="Favorita"
+                    disabled
+                >♡</button>
+            </div>
+
+            <input
+                type="file"
+                id="selectorArchivos"
+                accept="audio/*"
+                multiple
+            >
+
+            <!-- Información de la canción -->
+            <section class="informacion-cancion">
+                <h2 id="titulo">Selecciona una canción</h2>
+                <p id="artista">Artista desconocido</p>
+                <p id="album" class="album"></p>
+                <p id="pista" class="pista"></p>
+                <canvas id="visualizador" class="visualizador" width="300" height="64" aria-hidden="true"></canvas>
+            </section>
+
+        </div>
+
+        <!-- Esquina para estirar la tarjeta -->
+        <div class="asa-redimensionar" id="asa" aria-hidden="true"></div>
+
+    </main>
+    <!-- =========================
+     TARJETA DE LA LISTA
+    ========================== -->
+    <main class="tarjeta-glass tarjeta-lista" id="tarjetaLista" hidden>
+        <div class="lista-cabecera">
+            <h2>Canciones</h2>
+            <button type="button" id="cerrarLista" aria-label="Cerrar lista">✕</button>
+        </div>
+        <div class="fila-lista-botones">
+            <button type="button" id="filtroFavoritas" class="boton-redondo" aria-pressed="false"
+                aria-label="Mostrar solo favoritas" title="Solo favoritas">♡</button>
+            <button type="button" id="ordenarLista" class="boton-redondo"
+                aria-label="Ordenar: original" title="Ordenar lista">⇅</button>
+            <button
+                type="button"
+                id="reproducirTodo"
+                class="boton-redondo"
+                aria-label="Reproducir todo"
+                title="Reproducir todo"
+            >▶</button>
+            <button
+                type="button"
+                id="mezclarTodo"
+                class="boton-redondo"
+                aria-label="Mezclar y reproducir"
+                title="Mezclar y reproducir"
+            >&#128256;&#xFE0E;</button>
+        </div>
+        <input
+            type="search"
+            id="buscador"
+            placeholder="Buscar canción o artista"
+            aria-label="Buscar canción"
+        >
+        <ul id="listaCanciones"></ul>
+        <!-- Esquina para estirar la lista -->
+        <div class="asa-redimensionar" id="asaLista" aria-hidden="true"></div>
+    </main>
+
+    <!-- =========================
+         ELEMENTO DE AUDIO
+    ========================== -->
+    <audio id="audio" preload="metadata"></audio>
+
+
+</body>
+</html>

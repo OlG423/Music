@@ -1,0 +1,24 @@
+{
+    "name": "Mi reproductor ONIONs",
+    "short_name": "ONIONs",
+    "description": "Reproductor de música personal",
+    "start_url": "./index.html",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#d8e8c8",
+    "theme_color": "#33472d",
+    "icons": [
+        {
+            "src": "icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ]
+}
