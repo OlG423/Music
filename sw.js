@@ -1,4 +1,4 @@
-const CACHE = 'reproductor-v20';
+const CACHE = 'reproductor-v24';
 const ARCHIVOS = [
     './',
     './index.html',

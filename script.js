@@ -771,11 +771,13 @@ function aplicarTema(colores) {
 }
 // ===== CONTROLES DE REPRODUCCIÓN =====
 audio.addEventListener('play', () => {
-    btnReproducir.textContent = '⏸';
+    btnReproducir.textContent = '\u23F8\uFE0E';
+    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
 });
 
 audio.addEventListener('pause', () => {
-    btnReproducir.textContent = '▶';
+    btnReproducir.textContent = '\u25B6\uFE0E';
+    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
 });
 
 btnReproducir.addEventListener('click', () => {
@@ -1055,13 +1057,12 @@ configurarControlesSistema();
 
 // Mantiene el estado (reproduciendo o en pausa) sincronizado con el sistema
 audio.addEventListener('play', () => {
-    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+    btnReproducir.textContent = '\u23F8\uFE0E';
 });
 
 audio.addEventListener('pause', () => {
-    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+    btnReproducir.textContent = '\u25B6\uFE0E';
 });
-
 // ===== BUSCADOR =====
 const buscador = document.getElementById('buscador');
 
@@ -1526,3 +1527,4 @@ imgPortada.addEventListener('contextmenu', (e) => {
 imgPortada.addEventListener('dragstart', (e) => {
     e.preventDefault();
 });
+
