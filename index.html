@@ -77,30 +77,24 @@
             <!-- Botones del reproductor -->
             <div class="controles">
 
-                <button
-                    type="button"
-                    id="anterior"
-                    aria-label="Canción anterior"
-                >⏮</button>
-
-                <button
-                    type="button"
-                    id="reproducir"
-                    aria-label="Reproducir"
-                >▶</button>
-
-                <button
-                    type="button"
-                    id="siguiente"
-                    aria-label="Siguiente canción"
-                >⏭</button>
-
+                <button type="button" id="anterior" aria-label="Canción anterior">&#x23EE;&#xFE0E;</button>
+                <button type="button" id="reproducir" aria-label="Reproducir">&#x25B6;&#xFE0E;</button>
+                <button type="button" id="siguiente" aria-label="Siguiente canción">&#x23ED;&#xFE0E;</button>
                 <button
                     type="button"
                     id="aleatorio"
                     aria-label="Reproducción aleatoria"
                     aria-pressed="false"
-                >&#128256;&#xFE0E;</button>
+                >
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M16 3h5v5"/>
+                        <path d="M4 20L21 3"/>
+                        <path d="M21 16v5h-5"/>
+                        <path d="M15 15l6 6"/>
+                        <path d="M4 4l5 5"/>
+                    </svg>
+                </button>
 
                 <button
                     type="button"
